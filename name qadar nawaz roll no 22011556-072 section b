@@ -1,0 +1,201 @@
+#include <iostream>
+using namespace std;
+// Node structure for the linked list
+struct Node {
+    int data;
+    Node* next;
+    
+    Node(int value) : data(value), next(nullptr) {}
+};
+
+// Linked list class
+class LinkedList {
+private:
+    Node* head;
+
+public:
+    LinkedList() : head(nullptr) {}
+
+    // Function to insert a new node at the end of the list
+    void insertAtEnd(int value) {
+        Node* newNode = new Node(value);
+        if (!head) {
+            head = newNode;
+        } else {
+            Node* current = head;
+            while (current->next) {
+                current = current->next;
+            }
+            current->next = newNode;
+        }
+    }
+
+    // Function to insert a new node at any position in the list
+    void insertAtPosition(int value, int position) {
+        Node* newNode = new Node(value);
+        if (position == 1) {
+            newNode->next = head;
+            head = newNode;
+        } else {
+            Node* current = head;
+            for (int i = 1; i < position - 1 && current; ++i) {
+                current = current->next;
+            }
+            if (current) {
+                newNode->next = current->next;
+                current->next = newNode;
+            } else {
+                std::cout << "Invalid position for insertion." << endl;
+            }
+        }
+    }
+
+    // Function to search for a value in the list
+    bool search(int value) {
+        Node* current = head;
+        while (current) {
+            if (current->data == value) {
+                return true;
+            }
+            current = current->next;
+        }
+        return false;
+    }
+
+    // Function to update the value at any position in the list
+    void updateAtPosition(int value, int position) {
+        Node* current = head;
+        for (int i = 1; i < position && current; ++i) {
+            current = current->next;
+        }
+        if (current) {
+            current->data = value;
+        } else {
+            std::cout << "Invalid position for update." <<endl;
+        }
+    }
+
+    // Function to delete a node from any position in the list
+    void deleteAtPosition(int position) {
+        if (!head) {
+            cout << "List is empty. Cannot delete from empty list." <<endl;
+            return;
+        }
+
+        Node* temp = head;
+
+        if (position == 1) {
+            head = temp->next;
+            delete temp;
+        } else {
+            Node* prev = nullptr;
+            for (int i = 1; i < position && temp; ++i) {
+                prev = temp;
+                temp = temp->next;
+            }
+
+            if (!temp) {
+                std::cout << "Invalid position for deletion." <<endl;
+                return;
+            }
+
+            prev->next = temp->next;
+            delete temp;
+        }
+    }
+
+    // Function to delete a node from the end of the list
+    void deleteFromEnd() {
+        if (!head) {
+            cout << "List is empty. Cannot delete from empty list." <<endl;
+            return;
+        }
+
+        if (!head->next) {
+            delete head;
+            head = nullptr;
+            return;
+        }
+
+        Node* temp = head;
+        Node* prev = nullptr;
+
+        while (temp->next) {
+            prev = temp;
+            temp = temp->next;
+        }
+
+        prev->next = nullptr;
+        delete temp;
+    }
+
+    // Function to delete a node from the beginning of the list
+    void deleteFromBeginning() {
+        if (!head) {
+            cout << "List is empty. Cannot delete from empty list." <<endl;
+            return;
+        }
+
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+
+    // Function to display the elements of the list
+    void display() {
+        Node* current = head;
+        while (current) {
+            cout << current->data << " ";
+            current = current->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    LinkedList myList;
+
+    // Inserting elements at the end
+    myList.insertAtEnd(1);
+    myList.insertAtEnd(2);
+    myList.insertAtEnd(3);
+    myList.insertAtEnd(4);
+
+    std::cout << "Original List: ";
+    myList.display();
+
+    // Searching for an element
+    int searchValue = 3;
+    if (myList.search(searchValue)) {
+        cout << searchValue << " found in the list." << endl;
+    } else {
+        cout << searchValue << " not found in the list." << endl;
+    }
+
+    // Updating an element at a specific position
+    myList.updateAtPosition(10, 2);
+    cout << "List after updating at position 2: ";
+    myList.display();
+
+    // Inserting an element at a specific position
+    myList.insertAtPosition(5, 3);
+    std::cout << "List after inserting 5 at position 3: ";
+    myList.display();
+
+    // Deleting an element from a specific position
+    myList.deleteAtPosition(4);
+    cout << "List after deleting from position 4: ";
+    myList.display();
+
+    // Deleting from the end
+    myList.deleteFromEnd();
+    std::cout << "List after deleting from the end: ";
+    myList.display();
+
+    // Deleting from the beginning
+    myList.deleteFromBeginning();
+    std::cout << "List after deleting from the beginning: ";
+    myList.display();
+
+    return 0;
+}
